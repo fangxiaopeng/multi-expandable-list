@@ -1,0 +1,145 @@
+.theme-bg{
+    background-color: #057BDD;
+}
+
+.theme-color{
+    color: #057BDD;
+}
+
+.theme-border {
+    border: 1px solid #057BDD !important;
+}
+
+.txt-overflow{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.accordion_item_li {
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.accordion_outer_equip_name{
+    float: left;
+    width: 60%;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;    
+    color: black;
+}
+
+.accordion_outer_remark_icon{
+    float: right;
+    margin-right: 1rem;
+    width: 2rem;
+    margin-top: 0.2rem;
+}
+
+.accordion_inner_item_name{
+    height: 100%;
+    width: 35%;
+    height: 2.5rem;
+    float: left;
+    padding: 0.5rem 0.2rem 0.5rem 0.2rem;
+    font-size: 1rem;
+}
+
+.num_item_increment{
+    text-align: center;
+    width: 2.5rem;
+    float: left;
+    margin: 0.5rem 0.15rem;
+    padding: 0.15rem;
+    font-size: 0.8rem;
+    border-radius: 15%;
+}
+
+.num_item_content{
+    text-align: center;
+    float: left;
+    width: 25% !important;
+    height: calc(100% - 0.8rem) !important;
+    font-size: 0.8rem !important;
+    margin: 0.4rem 0.2rem !important;
+    padding: 0.2rem !important;
+    border-radius: 10% !important;
+}
+
+.txt_item_content{
+    float: left;
+    width: calc(65% - 2.4rem) !important;
+    height: calc(100% - 0.8rem) !important;
+    font-size: 0.8rem !important;
+    margin: 0.4rem 0.2rem !important;
+    padding: 0.2rem !important;
+    border-radius: 3px !important;
+}
+
+.pic_item_take_pic_div{
+    float: left;
+    height: calc(100% - 0.8rem);
+    margin: 0.5rem 0;
+    margin-left: 0.3rem;
+    border-radius: 3px;
+}
+
+.pic_item_take_pic_img{
+    width: 1.2rem;
+    margin-left: 0.2rem;
+    margin-top: 0.2rem;
+}
+
+.pic_item_take_pic_txt{
+    font-size: 0.9rem;
+    color: white;
+    float: right;
+    padding: 0.2rem;
+}
+
+.pic_item_select_pic_btn{
+    float: left;
+    height: calc(100% - 0.8rem);
+    width: 5.25rem;
+    margin: 0.5rem 0;
+    margin-left: 0.3rem;
+    padding: 0.2rem 0.3rem;
+    font-size: 0.9rem;
+    color: white;
+    border-radius: 3px;
+}
+
+.pic_item_photo_div{
+    clear: both;
+    margin-left: 35%;
+}
+
+.pic_item_photo_img{
+    width: 2.5rem;
+    height: 2.5rem;
+    background: lightgray;
+    float: left;
+    margin: 2px;
+}
+
+.select_item_div{
+    float: left;
+    width: calc(65% - 2rem);
+    height: 100%;
+    margin: 0.5rem 0;
+}
+
+.select_item_radio_btn{
+    height: 1rem;
+    width: 1rem;
+}
+
+.select_item_radio_lable{
+    font-size: 1rem;
+}
+
+.line{
+    clear: both;
+    height: 1px;
+    background-color: lightgrey;
+}
