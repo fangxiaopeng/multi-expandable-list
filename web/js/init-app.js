@@ -12,15 +12,15 @@ Template7.global = {
 var $$ = Dom7;
  
 // Add CSS Styles
-if (!isAndroid) {
+if (isAndroid) {
     $$('head').append(
-        '<link rel="stylesheet" href="lib/css/framework7.material.min.css">' +
-        '<link rel="stylesheet" href="lib/css/framework7.material.colors.min.css">'
+        '<link rel="stylesheet" href="libs/css/framework7.material.min.css">' +
+        '<link rel="stylesheet" href="libs/css/framework7.material.colors.min.css">'
     );
 } else {
     $$('head').append(
-        '<link rel="stylesheet" href="lib/css/framework7.ios.min.css">' +
-        '<link rel="stylesheet" href="lib/css/framework7.ios.colors.min.css">'
+        '<link rel="stylesheet" href="libs/css/framework7.ios.min.css">' +
+        '<link rel="stylesheet" href="libs/css/framework7.ios.colors.min.css">'
     );
 }
  
