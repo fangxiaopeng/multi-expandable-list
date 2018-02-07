@@ -50,6 +50,8 @@ var utils = {
 var expandableList = function () {
     var page, templateStr;
 
+    var imageDir = "images/";   // 图片路径
+
     /*
      * 获取模板文本
      * */
@@ -117,11 +119,6 @@ var expandableList = function () {
         destroy();
     }
 
-    function destroy() {
-        page = null;
-
-    }
-
     function bindEvent(method) {
         if (method === 'on' || method === 'off') {
 
@@ -129,9 +126,37 @@ var expandableList = function () {
     }
 
     function initViews() {
+        utils.get("data/list.json",function(res){
+            var data = JSON.parse(res).data.data;
+            buildEquipsBox(data);
+        },function(error){
 
+        });
     }
 
+    /**
+     * 组装、渲染二级列表
+     * @param {*二级列表数据} items 
+     */
+    function buildEquipsBox(items) {
+        var datas, htmlstr = '', accordionList;
+        datas = {
+            equips: items,
+            img_dir: imageDir
+        };
+        try {
+            htmlstr = juicer(templateStr, datas);
+            accordionList = page.find("#accordion-list");
+            accordionList.html(htmlstr);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function destroy() {
+        page = null;
+
+    }
 
     return {
         beforeInit: beforeInit,
