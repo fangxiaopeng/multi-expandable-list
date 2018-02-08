@@ -1,14 +1,11 @@
 {# 请不要随便格式化此文件代码}
 <ul>
     {@each equips as equip,parentIndex}
-    <li class="cusv1-accordion-item equip_accordion_item {@if equip.e_state != "3"}accordion-item-expanded{@/if}"
-     data-eId = ${equip.e_id} data-parent_index = ${parentIndex}>
-        <a href="#" class="item-link item-content accordion-item-header">
-            <div style="height:2.5rem;width:100%">
-                <span class="accordion_outer_equip_name txt-overflow">${equip.e_name}</span>
-                <img class="accordion_outer_remark_icon" src="images/item_remark_img.png" />
-            </div>
-        </a>
+    <li class="cusv1-accordion-item accordion_item_li {@if equip.e_state != "3"}accordion-item-expanded{@/if}">
+        <div class="item-link item-content accordion-item-header">
+            <span class="accordion_outer_equip_name txt-overflow">${equip.e_name}</span>
+            <img class="accordion_outer_remark_icon" src="images/item_remark_img.png" />
+        </div>
         <div class="line"></div>
         <div class="accordion-item-content">
             <div class="list-block" style="margin: 0px 15px;">
@@ -59,7 +56,7 @@
                             </div>
                             <span class="pic_item_select_pic_btn txt-overflow theme-bg">从相册选择</span>
                         </div>
-                        <div class="pic_item_photo_div" data-imgDir = ${img_dir}>
+                        <div class="pic_item_photo_div">
                             {@if item.i_content.trim() != ""}
                                 {@each item.i_content.trim().split(',') as pic,index}                                
                                 <img class="pic_item_photo_img" src="${img_dir}${pic}" />
