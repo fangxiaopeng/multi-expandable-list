@@ -11,7 +11,8 @@
         if (content.length === 0) content = item.find('.accordion-item-content');
         var expandedItem = list.length > 0 && item.parent().children('.accordion-item-expanded');
         if (expandedItem.length > 0) {
-            app.accordionClose(expandedItem);
+            // 打开当前item项时，关闭其他item项
+            // app.accordionClose(expandedItem);
         }
         content.css('height', content[0].scrollHeight + 'px').transitionEnd(function () {
             if (item.hasClass('accordion-item-expanded')) {
