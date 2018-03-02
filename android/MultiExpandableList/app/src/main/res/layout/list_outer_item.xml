@@ -25,4 +25,10 @@
         android:layout_marginRight="10dp"
         android:src="@mipmap/remark_img" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/lable"
+        android:background="@color/gray_divider" />
+
 </RelativeLayout>
