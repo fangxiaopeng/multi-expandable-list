@@ -1,8 +1,14 @@
 package fxp.com.multiexpandablelist.adapter;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+
+import java.util.List;
+
+import fxp.com.multiexpandablelist.bean.EquipmentInfo;
+import fxp.com.multiexpandablelist.bean.ItemInfo;
 
 /**
  *
@@ -13,49 +19,61 @@ import android.widget.BaseExpandableListAdapter;
 
 public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
+    private Context context;
+
+    private List<EquipmentInfo> groupList;
+
+    private List<List<ItemInfo>> childrenList;
+
+    public ExpandableListViewAdapter(Context context, List<EquipmentInfo> groupList, List<List<ItemInfo>> childrenList){
+        this.context = context;
+        this.groupList = groupList;
+        this.childrenList = childrenList;
+    }
+
     @Override
     public int getGroupCount() {
-        return 0;
-    }
-
-    @Override
-    public int getChildrenCount(int i) {
-        return 0;
-    }
-
-    @Override
-    public Object getGroup(int i) {
-        return null;
-    }
-
-    @Override
-    public Object getChild(int i, int i1) {
-        return null;
+        return groupList.size();
     }
 
     @Override
     public long getGroupId(int i) {
-        return 0;
+        return i;
+    }
+
+    @Override
+    public Object getGroup(int i) {
+        return groupList.get(i);
+    }
+
+    @Override
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        return null;
+    }
+
+    @Override
+    public int getChildrenCount(int i) {
+        return childrenList.get(i).size();
+    }
+
+    @Override
+    public Object getChild(int i, int i1) {
+        return childrenList.get(i).get(i1);
     }
 
     @Override
     public long getChildId(int i, int i1) {
-        return 0;
+        return i1;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        return null;
     }
 
     @Override
     public boolean hasStableIds() {
         return false;
-    }
-
-    @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        return null;
-    }
-
-    @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        return null;
     }
 
     @Override
