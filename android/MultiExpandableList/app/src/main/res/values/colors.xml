@@ -11,4 +11,13 @@
 
     <!--透明色-->
     <color name="transparent">#00000000</color>
+
+    <color name="gray_divider">#DADADA</color>
+
+    <color name="focus_color">#A0C2FF</color>
+
+    <color name="unfocus_empty_color">#BDC0C2</color>
+
+    <color name="unfocus_not_empty_color">#5D6368</color>
+
 </resources>
