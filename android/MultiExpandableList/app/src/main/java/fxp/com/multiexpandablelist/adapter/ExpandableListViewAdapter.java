@@ -61,7 +61,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             holder = new GroupViewHolder();
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.module_list_outer_item, null);
+            convertView = mInflater.inflate(R.layout.list_outer_item, null);
             holder.lable = (TextView) convertView.findViewById(R.id.lable);
             convertView.setTag(holder);
         } else {
@@ -135,7 +135,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.module_list_inner_edit_item, null);
+        convertView = inflater.inflate(R.layout.list_inner_edit_item, null);
         editViewHolder = new EditViewHolder();
         editViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
         editViewHolder.value = (EditText) convertView.findViewById(R.id.value);
