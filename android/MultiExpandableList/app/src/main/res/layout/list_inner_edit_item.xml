@@ -8,9 +8,9 @@
         android:id="@+id/lable"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="5"
         android:gravity="left|center_vertical"
         android:text="111"
@@ -20,10 +20,12 @@
         android:id="@+id/value"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="5"
+        android:background="@drawable/edit_bg"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="16sp" />
+        android:singleLine="true"
+        android:textSize="12sp" />
 </LinearLayout>
