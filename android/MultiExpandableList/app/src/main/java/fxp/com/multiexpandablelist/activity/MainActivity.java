@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             ItemInfo itemInfo = new ItemInfo();
             itemInfo.setE_id("" + i);
             itemInfo.setI_id(i + "_0");
+            itemInfo.setI_type("0");
             itemInfo.setI_name("机身温度");
             itemInfo.setI_content("25");
             itemInfos.add(itemInfo);
