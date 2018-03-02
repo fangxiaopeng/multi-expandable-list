@@ -93,17 +93,36 @@ public class MainActivity extends AppCompatActivity {
      * 模拟ExpandableListView二级列表数据
      */
     private void getChildrenListData() {
+
+        List<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
+
+        ItemInfo itemInfo1 = new ItemInfo();
+        itemInfo1.setE_id("1");
+        itemInfo1.setI_id("1_0");
+        itemInfo1.setI_type("0");
+        itemInfo1.setI_name("机身温度");
+        itemInfo1.setI_content("25");
+        itemInfos.add(itemInfo1);
+
+        ItemInfo itemInfo2 = new ItemInfo();
+        itemInfo2.setE_id("2");
+        itemInfo2.setI_id("2_1");
+        itemInfo2.setI_type("1");
+        itemInfo2.setI_name("播放内容");
+        itemInfo2.setI_content("海贼王万国篇-路飞VS卡二");
+        itemInfos.add(itemInfo2);
+
+/*        ItemInfo itemInfo3 = new ItemInfo();
+        itemInfo3.setE_id("3");
+        itemInfo3.setI_id("3_1");
+        itemInfo3.setI_type("2");
+        itemInfo3.setI_name("播放内容");
+        itemInfo3.setI_content("海贼王万国篇-路飞VS卡二");
+        itemInfos.add(itemInfo3);*/
+
         childrenList = new ArrayList<List<ItemInfo>>();
         for (int i = 0; i < 8; i++) {
-            List<ItemInfo> itemInfos = new ArrayList<ItemInfo>();
-            ItemInfo itemInfo = new ItemInfo();
-            itemInfo.setE_id("" + i);
-            itemInfo.setI_id(i + "_0");
-            itemInfo.setI_type("0");
-            itemInfo.setI_name("机身温度");
-            itemInfo.setI_content("25");
-            itemInfos.add(itemInfo);
-            childrenList.add(i,itemInfos);
+            childrenList.add(itemInfos);
         }
     }
 

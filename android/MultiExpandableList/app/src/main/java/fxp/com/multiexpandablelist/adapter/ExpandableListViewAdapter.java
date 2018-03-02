@@ -34,6 +34,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private final int EDITTYPE = 0;
 
+    private final int TEXTTYPE = 1;
+
     public ExpandableListViewAdapter(Context context, List<EquipmentInfo> groupList, List<List<ItemInfo>> childrenList) {
         this.context = context;
         this.groupList = groupList;
@@ -93,6 +95,32 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int i, int i1) {
+        return false;
+    }
+
+    /**
+     * 包含多种类型item布局时，必须重写此方法
+     *
+     * 注意：此处返回值必须大于或等于布局种类数，不然会报错FATAL EXCEPTION: main Process: fxp.com.multiexpandablelist, PID: 28232
+     java.lang.ArrayIndexOutOfBoundsException: length=2; index=2
+     at android.widget.AbsListView$RecycleBin.addScrapView(AbsListView.java:6902)
+     at android.widget.ListView.measureHeightOfChildren(ListView.java:1338)
+     at android.widget.ListView.onMeasure(ListView.java:1233)
+     *
+     * @return 子布局种类数目
+     */
+    @Override
+    public int getChildTypeCount() {
+        return 6;
+    }
+
+    @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         int type = getChildType(groupPosition, childPosition);
         switch (type) {
@@ -101,21 +129,16 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 convertView = setEditCell(convertView, groupPosition, childPosition);
                 break;
             }
+            //字符型
+            case TEXTTYPE: {
+                convertView = setTextCell(convertView, groupPosition, childPosition);
+                break;
+            }
             default:
                 break;
         }
 
         return convertView;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public boolean isChildSelectable(int i, int i1) {
-        return false;
     }
 
     /**
@@ -128,7 +151,6 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
      */
     private View setEditCell(View convertView, final int groupPosition, final int childPosition) {
         EditViewHolder editViewHolder = null;
-        final EditText tsEditText;
 
         if (null != convertView) {
             ((LinearLayout) convertView).removeAllViews();
@@ -146,12 +168,45 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    /**
+     * 字符型View
+     *
+     * @param convertView
+     * @param groupPosition
+     * @param childPosition
+     * @return
+     */
+    private View setTextCell(View convertView, final int groupPosition, final int childPosition) {
+        TextViewHolder textViewHolder = null;
+
+        if (null != convertView) {
+            ((LinearLayout) convertView).removeAllViews();
+        }
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_inner_text_item, null);
+        textViewHolder = new TextViewHolder();
+        textViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
+        textViewHolder.value = (EditText) convertView.findViewById(R.id.value);
+
+        textViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
+        textViewHolder.value.setHint("");
+        textViewHolder.value.setText(childrenList.get(groupPosition).get(childPosition).getI_content());
+
+        return convertView;
+    }
+
     class GroupViewHolder {
         private TextView lable;
         private ImageView stateIcon;
     }
 
     class EditViewHolder {
+        private TextView lable;
+        private EditText value;
+    }
+
+    class TextViewHolder {
         private TextView lable;
         private EditText value;
     }
