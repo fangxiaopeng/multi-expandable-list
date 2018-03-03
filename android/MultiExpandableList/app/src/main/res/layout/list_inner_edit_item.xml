@@ -23,6 +23,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/decrease_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="6dp"
@@ -50,6 +51,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/increase_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="6dp"
