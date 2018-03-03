@@ -1,8 +1,8 @@
 package fxp.com.multiexpandablelist.activity;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
@@ -106,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
         itemInfo1.setI_content("");
         itemInfos.add(itemInfo1);
 
+        ItemInfo itemInfo3 = new ItemInfo();
+        itemInfo3.setE_id("3");
+        itemInfo3.setI_id("3_1");
+        itemInfo3.setI_type("2");
+        itemInfo3.setI_name("画面色彩");
+        itemInfo3.setI_content("");
+        itemInfos.add(itemInfo3);
+
         ItemInfo itemInfo2 = new ItemInfo();
         itemInfo2.setE_id("2");
         itemInfo2.setI_id("2_1");
@@ -114,13 +122,14 @@ public class MainActivity extends AppCompatActivity {
         itemInfo2.setI_content("海贼王万国篇-路飞VS卡二");
         itemInfos.add(itemInfo2);
 
-        ItemInfo itemInfo3 = new ItemInfo();
-        itemInfo3.setE_id("3");
-        itemInfo3.setI_id("3_1");
-        itemInfo3.setI_type("2");
-        itemInfo3.setI_name("画面色彩");
-        itemInfo3.setI_content("");
-        itemInfos.add(itemInfo3);
+        ItemInfo itemInfo4 = new ItemInfo();
+        itemInfo4.setE_id("4");
+        itemInfo4.setI_id("4_1");
+        itemInfo4.setI_type("3");
+        itemInfo4.setI_name("体验评价");
+        itemInfo4.setI_content("播放流畅/音质很好/画质一般/屏幕反光/机身温度过高");
+        itemInfo4.setI_value("音质很好/机身温度过高");
+        itemInfos.add(itemInfo4);
 
         childrenList = new ArrayList<List<ItemInfo>>();
         for (int i = 0; i < 8; i++) {

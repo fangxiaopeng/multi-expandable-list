@@ -18,6 +18,7 @@ import java.util.List;
 import fxp.com.multiexpandablelist.R;
 import fxp.com.multiexpandablelist.bean.EquipmentInfo;
 import fxp.com.multiexpandablelist.bean.ItemInfo;
+import fxp.com.multiexpandablelist.entity.CheckItem;
 import fxp.com.multiexpandablelist.view.TagCloudLayout;
 
 /**
@@ -42,8 +43,19 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private final int SELECTTYPE = 2;
 
+    private final int CHECKTYPE = 3;
+
     // 缓存单选型View选择结果，用于界面重绘后恢复选中状态
     private String itemState = "";
+
+    // 多选型View标签适配器
+    private TagCheckAdapter tagCheckAdapter;
+
+    // 多选型View标签列表
+    private List<CheckItem> checkItems = new ArrayList<CheckItem>();
+
+    // 多选型View中标签选中状态，存储所有标签的选中状态
+    private List<Boolean> selectState = new ArrayList<Boolean>();
 
     public ExpandableListViewAdapter(Context context, List<EquipmentInfo> groupList, List<List<ItemInfo>> childrenList) {
         this.context = context;
@@ -146,6 +158,11 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
             //单选型
             case SELECTTYPE: {
                 convertView = setSelectCell(convertView, groupPosition, childPosition);
+                break;
+            }
+            //复选型
+            case CHECKTYPE: {
+                convertView = setCheckCell(convertView, groupPosition, childPosition);
                 break;
             }
             default:
@@ -299,7 +316,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         selectViewHolder.mContainer.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
             @Override
             public void itemClick(int position) {
-
+                // 保存状态，正常/异常
                 if (position == 0) {
                     itemState = context.getResources().getString(R.string.commen);
                     childrenList.get(groupPosition).get(childPosition).setI_state(ItemInfo.STATE_CORRECT);
@@ -314,6 +331,61 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
                 //保存选择值，用于界面重绘后显示重绘前状态
                 childrenList.get(groupPosition).get(childPosition).setI_content(itemState);
+            }
+        });
+
+        return convertView;
+    }
+
+
+    /**
+     * 复选型View
+     *
+     * @param convertView
+     * @param groupPosition
+     * @param childPosition
+     * @return
+     */
+    public View setCheckCell(View convertView, final int groupPosition, final int childPosition) {
+        CheckViewHolder checkViewHolder = null;
+
+        if (null != convertView) {
+            ((LinearLayout) convertView).removeAllViews();
+        }
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_inner_select_item, null);
+        checkViewHolder = new CheckViewHolder();
+        checkViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
+        checkViewHolder.mContainer = (TagCloudLayout) convertView.findViewById(R.id.container);
+        convertView.setTag(checkViewHolder);
+
+        checkViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
+
+        // 获取多选型View标签列表（过滤各标签选中状态）
+        getTagList(childrenList.get(groupPosition).get(childPosition));
+
+        tagCheckAdapter = new TagCheckAdapter(context, checkItems);
+        checkViewHolder.mContainer.setAdapter(tagCheckAdapter);
+        checkViewHolder.mContainer.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
+            @Override
+            public void itemClick(int position) {
+                boolean isSelect = checkItems.get(position).isSelect();
+                if (isSelect) {
+                    checkItems.get(position).setIsSelect(false);
+                    tagCheckAdapter.setIsSelect(position, false);
+                    selectState.set(position, false);
+                } else {
+                    checkItems.get(position).setIsSelect(true);
+                    tagCheckAdapter.setIsSelect(position, true);
+                    selectState.set(position, true);
+                }
+
+                // 刷新标签列表
+                notifyDataSetInvalidated();
+
+                // 保存已选标签
+                childrenList.get(groupPosition).get(childPosition).setI_value(getSelectedTags(checkItems));
             }
         });
 
@@ -342,4 +414,88 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         TextView lable;
         TagCloudLayout mContainer;
     }
+
+    class CheckViewHolder {
+        TextView lable;
+        TagCloudLayout mContainer;
+    }
+
+    /**
+     * 多选型View - 获取标签列表（过滤各标签选中状态）
+     *
+     * @param itemInfo 当前item项
+     */
+    private void getTagList(ItemInfo itemInfo) {
+
+        // 分割i_content，获取到标签数组lableStates
+        String i_content = itemInfo.getI_content();
+        String lableStates[] = null;
+        if (i_content != null && !i_content.equals("")) {
+            lableStates = i_content.split("/");
+        }
+
+        // 分割i_value，获取已选标签数组i_values
+        String i_value = itemInfo.getI_value();
+        String i_values[] = null;
+        if (i_value != null && !i_value.equals("")) {
+            i_values = i_value.split("/");
+        }
+
+        // 获取所有标签选中状态
+        if (selectState.size() == 0) {
+            // 遍历所有标签，获取标签选中状态
+            for (int i = 0; i < lableStates.length; i++) {
+                // 匹配flag
+                boolean match = false;
+                // 存在已选中的标签
+                if (i_values != null) {
+                    // 遍历已选中标签，与当前标签lableStates[i]匹配
+                    for (int j = 0; j < i_values.length; j++) {
+                        // 当前标签lableStates[i]已被选中
+                        if (i_values[j].equals(lableStates[i])) {
+                            selectState.add(true);
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                if (!match) {
+                    // 当前标签lableStates[i]已被选中
+                    selectState.add(false);
+                }
+            }
+        }
+
+        // 清空标签列表
+        checkItems.clear();
+
+        // 组装标签列表
+        for (int i = 0; i < lableStates.length; i++) {
+            CheckItem checkItem = new CheckItem();
+            checkItem.setItemLable(lableStates[i]);
+            checkItem.setIsSelect(selectState.get(i));
+            checkItems.add(i, checkItem);
+        }
+    }
+
+    /**
+     * 多选型View - 获取已选标签
+     *
+     * @param items 标签列表
+     * @return 已选标签拼接字符串
+     */
+    private String getSelectedTags(List<CheckItem> items) {
+        String tags = "";
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).isSelect()) {
+                if (tags.trim().equals("") || tags == null) {
+                    tags = tags + items.get(i).getItemLable();
+                } else {
+                    tags = tags + "/" + items.get(i).getItemLable();
+                }
+            }
+        }
+        return tags;
+    }
+
 }
