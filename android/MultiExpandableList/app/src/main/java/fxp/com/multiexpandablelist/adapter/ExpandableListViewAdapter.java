@@ -12,11 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fxp.com.multiexpandablelist.R;
 import fxp.com.multiexpandablelist.bean.EquipmentInfo;
 import fxp.com.multiexpandablelist.bean.ItemInfo;
+import fxp.com.multiexpandablelist.view.TagCloudLayout;
 
 /**
  * ExpandableListView 适配器
@@ -40,6 +42,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private final int SELECTTYPE = 2;
 
+    // 缓存单选型View选择结果，用于界面重绘后恢复选中状态
+    private String itemState = "";
 
     public ExpandableListViewAdapter(Context context, List<EquipmentInfo> groupList, List<List<ItemInfo>> childrenList) {
         this.context = context;
@@ -184,7 +188,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         editViewHolder.increase.setText("+" + itemInfo.getI_increment());
 
         //界面重绘后，让输入框显示重绘前输入的内容
-        editViewHolder.value.setText(childrenList.get(groupPosition).get(childPosition).getI_content());
+        editViewHolder.value.setText(itemInfo.getI_content());
 
         editViewHolder.value.addTextChangedListener(new TextWatcher() {
             @Override
@@ -271,10 +275,47 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         if (null != convertView) {
             ((LinearLayout) convertView).removeAllViews();
         }
+
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_inner_select_item, null);
 
         selectViewHolder = new SelectViewHolder();
+        selectViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
+        selectViewHolder.mContainer = (TagCloudLayout) convertView.findViewById(R.id.container);
+        convertView.setTag(selectViewHolder);
+
+        selectViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
+
+        //获取选择值，用于界面重绘后显示重绘前状态
+        itemState = childrenList.get(groupPosition).get(childPosition).getI_content();
+
+        List<String> mList = new ArrayList<>();
+        mList.add(context.getResources().getString(R.string.commen));
+        mList.add(context.getResources().getString(R.string.error));
+
+        TagBaseAdapter mAdapter = new TagBaseAdapter(context, mList, itemState);
+        selectViewHolder.mContainer.setAdapter(mAdapter);
+
+        selectViewHolder.mContainer.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
+            @Override
+            public void itemClick(int position) {
+
+                if (position == 0) {
+                    itemState = context.getResources().getString(R.string.commen);
+                    childrenList.get(groupPosition).get(childPosition).setI_state(ItemInfo.STATE_CORRECT);
+                } else if (position == 1) {
+                    itemState = context.getResources().getString(R.string.error);
+                    childrenList.get(groupPosition).get(childPosition).setI_state(ItemInfo.STATE_ERROR);
+                } else {
+                }
+
+                // 刷新选中结果
+                notifyDataSetInvalidated();
+
+                //保存选择值，用于界面重绘后显示重绘前状态
+                childrenList.get(groupPosition).get(childPosition).setI_content(itemState);
+            }
+        });
 
         return convertView;
     }
@@ -299,6 +340,6 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     class SelectViewHolder {
         TextView lable;
-
+        TagCloudLayout mContainer;
     }
 }

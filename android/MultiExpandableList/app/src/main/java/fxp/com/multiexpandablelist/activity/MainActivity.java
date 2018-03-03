@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         initListeners();
     }
 
-    private void initDatas(){
+    private void initDatas() {
 
         context = getApplicationContext();
 
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initViews(){
+    private void initViews() {
 
         findViews();
 
@@ -55,19 +55,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initListeners(){
+    private void initListeners() {
 
     }
 
-    private void findViews(){
-        expandableListView = (ExpandableListView)findViewById(R.id.expandable_lv);
+    private void findViews() {
+        expandableListView = (ExpandableListView) findViewById(R.id.expandable_lv);
     }
 
     /**
-     *  初始化ExpandableListView
+     * 初始化ExpandableListView
      */
-    private void initExpandableListView(){
-        expandableListViewAdapter = new ExpandableListViewAdapter(context,groupList,childrenList);
+    private void initExpandableListView() {
+        expandableListViewAdapter = new ExpandableListViewAdapter(context, groupList, childrenList);
         expandableListView.setAdapter(expandableListViewAdapter);
         expandableListView.setGroupIndicator(null);
         //设置默认为展开状态
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             EquipmentInfo equipmentInfo = new EquipmentInfo();
             equipmentInfo.setE_id("" + i);
             equipmentInfo.setE_name("小米电视A4");
-            groupList.add(i,equipmentInfo);
+            groupList.add(i, equipmentInfo);
         }
     }
 
@@ -114,13 +114,13 @@ public class MainActivity extends AppCompatActivity {
         itemInfo2.setI_content("海贼王万国篇-路飞VS卡二");
         itemInfos.add(itemInfo2);
 
-/*        ItemInfo itemInfo3 = new ItemInfo();
+        ItemInfo itemInfo3 = new ItemInfo();
         itemInfo3.setE_id("3");
         itemInfo3.setI_id("3_1");
         itemInfo3.setI_type("2");
-        itemInfo3.setI_name("播放内容");
-        itemInfo3.setI_content("海贼王万国篇-路飞VS卡二");
-        itemInfos.add(itemInfo3);*/
+        itemInfo3.setI_name("画面色彩");
+        itemInfo3.setI_content("");
+        itemInfos.add(itemInfo3);
 
         childrenList = new ArrayList<List<ItemInfo>>();
         for (int i = 0; i < 8; i++) {
