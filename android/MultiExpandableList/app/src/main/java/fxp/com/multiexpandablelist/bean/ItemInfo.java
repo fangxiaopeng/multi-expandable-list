@@ -1,13 +1,16 @@
 package fxp.com.multiexpandablelist.bean;
 
 /**
- *
  * 设备参数实体类
- *
+ * <p>
  * Created by fxp on 2018/3/2.
  */
 
 public class ItemInfo {
+
+    public static String STATE_CORRECT = "0";
+
+    public static String STATE_ERROR = "1";
 
     private String i_id;
 
