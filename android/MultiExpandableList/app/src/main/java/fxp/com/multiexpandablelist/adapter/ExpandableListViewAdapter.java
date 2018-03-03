@@ -106,12 +106,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     /**
      * 包含多种类型item布局时，必须重写此方法
-     *
+     * <p>
      * 注意：此处返回值必须大于或等于布局种类数，不然会报错FATAL EXCEPTION: main Process: fxp.com.multiexpandablelist, PID: 28232
-     java.lang.ArrayIndexOutOfBoundsException: length=2; index=2
-     at android.widget.AbsListView$RecycleBin.addScrapView(AbsListView.java:6902)
-     at android.widget.ListView.measureHeightOfChildren(ListView.java:1338)
-     at android.widget.ListView.onMeasure(ListView.java:1233)
+     * java.lang.ArrayIndexOutOfBoundsException: length=2; index=2
+     * at android.widget.AbsListView$RecycleBin.addScrapView(AbsListView.java:6902)
+     * at android.widget.ListView.measureHeightOfChildren(ListView.java:1338)
+     * at android.widget.ListView.onMeasure(ListView.java:1233)
      *
      * @return 子布局种类数目
      */
@@ -159,11 +159,16 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_inner_edit_item, null);
         editViewHolder = new EditViewHolder();
+        editViewHolder.decrease = (TextView) convertView.findViewById(R.id.decrease_btn);
         editViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
         editViewHolder.value = (EditText) convertView.findViewById(R.id.value);
+        editViewHolder.increase = (TextView) convertView.findViewById(R.id.increase_btn);
 
-        editViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
-        editViewHolder.value.setHint("");
+        ItemInfo itemInfo = childrenList.get(groupPosition).get(childPosition);
+        editViewHolder.lable.setText(itemInfo.getI_name());
+        editViewHolder.decrease.setText("-" + itemInfo.getI_increment());
+        editViewHolder.value.setHint(itemInfo.getI_reference());
+        editViewHolder.increase.setText("+" + itemInfo.getI_increment());
 
         return convertView;
     }
@@ -202,8 +207,10 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     class EditViewHolder {
+        private TextView decrease;
         private TextView lable;
         private EditText value;
+        private TextView increase;
     }
 
     class TextViewHolder {
