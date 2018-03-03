@@ -1,6 +1,8 @@
 package fxp.com.multiexpandablelist.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,9 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private final int EDITTYPE = 0;
 
     private final int TEXTTYPE = 1;
+
+    private final int SELECTTYPE = 2;
+
 
     public ExpandableListViewAdapter(Context context, List<EquipmentInfo> groupList, List<List<ItemInfo>> childrenList) {
         this.context = context;
@@ -134,6 +139,11 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 convertView = setTextCell(convertView, groupPosition, childPosition);
                 break;
             }
+            //单选型
+            case SELECTTYPE: {
+                convertView = setSelectCell(convertView, groupPosition, childPosition);
+                break;
+            }
             default:
                 break;
         }
@@ -151,6 +161,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
      */
     private View setEditCell(View convertView, final int groupPosition, final int childPosition) {
         EditViewHolder editViewHolder = null;
+        final EditText tsEditText;
 
         if (null != convertView) {
             ((LinearLayout) convertView).removeAllViews();
@@ -164,11 +175,34 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         editViewHolder.value = (EditText) convertView.findViewById(R.id.value);
         editViewHolder.increase = (TextView) convertView.findViewById(R.id.increase_btn);
 
+        tsEditText = (EditText) convertView.findViewById(R.id.value);
+
         ItemInfo itemInfo = childrenList.get(groupPosition).get(childPosition);
         editViewHolder.lable.setText(itemInfo.getI_name());
         editViewHolder.decrease.setText("-" + itemInfo.getI_increment());
         editViewHolder.value.setHint(itemInfo.getI_reference());
         editViewHolder.increase.setText("+" + itemInfo.getI_increment());
+
+        //界面重绘后，让输入框显示重绘前输入的内容
+        editViewHolder.value.setText(childrenList.get(groupPosition).get(childPosition).getI_content());
+
+        editViewHolder.value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //将输入框中内容保存，界面重绘后，让输入框显示保存的内容
+                childrenList.get(groupPosition).get(childPosition).setI_content(tsEditText.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         return convertView;
     }
@@ -183,6 +217,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
      */
     private View setTextCell(View convertView, final int groupPosition, final int childPosition) {
         TextViewHolder textViewHolder = null;
+        final EditText tsEditText;
 
         if (null != convertView) {
             ((LinearLayout) convertView).removeAllViews();
@@ -194,12 +229,56 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         textViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
         textViewHolder.value = (EditText) convertView.findViewById(R.id.value);
 
+        tsEditText = (EditText) convertView.findViewById(R.id.value);
+
         textViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
         textViewHolder.value.setHint("");
+        //界面重绘后，让输入框显示重绘前输入的内容
         textViewHolder.value.setText(childrenList.get(groupPosition).get(childPosition).getI_content());
+
+        textViewHolder.value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //将输入框中内容保存，界面重绘后，让输入框显示保存的内容
+                childrenList.get(groupPosition).get(childPosition).setI_content(tsEditText.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         return convertView;
     }
+
+    /**
+     * 单选型View
+     *
+     * @param convertView
+     * @param groupPosition
+     * @param childPosition
+     * @return
+     */
+    private View setSelectCell(View convertView, final int groupPosition, final int childPosition) {
+        SelectViewHolder selectViewHolder = null;
+
+        if (null != convertView) {
+            ((LinearLayout) convertView).removeAllViews();
+        }
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_inner_select_item, null);
+
+        selectViewHolder = new SelectViewHolder();
+
+        return convertView;
+    }
+
 
     class GroupViewHolder {
         private TextView lable;
@@ -216,5 +295,10 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     class TextViewHolder {
         private TextView lable;
         private EditText value;
+    }
+
+    class SelectViewHolder {
+        TextView lable;
+
     }
 }
