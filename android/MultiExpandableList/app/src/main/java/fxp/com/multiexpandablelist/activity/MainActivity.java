@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
         itemInfo1.setI_id("1_0");
         itemInfo1.setI_type("0");
         itemInfo1.setI_name("机身温度");
+        itemInfo1.setI_increment("0.5");
+        itemInfo1.setI_reference("-10~60");
         itemInfo1.setI_content("25");
         itemInfos.add(itemInfo1);
 
