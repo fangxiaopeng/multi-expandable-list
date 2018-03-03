@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MultiExpandableList</string>
+    <string name="commen">正常</string>
+    <string name="error">异常</string>
 </resources>
