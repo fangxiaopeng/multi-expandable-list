@@ -9,6 +9,14 @@
     /** 黑色 **/
     <color name="black">#ff000000</color>
 
+    <color name="light_gray">#CECECE</color>
+
+    <color name="primary">#FF673E</color>
+
+    <color name="primary_dark">#FF673E</color>
+
+    <color name="primary_light">#FFCDD2</color>
+
     <!--透明色-->
     <color name="transparent">#00000000</color>
 
@@ -19,5 +27,10 @@
     <color name="unfocus_empty_color">#BDC0C2</color>
 
     <color name="unfocus_not_empty_color">#5D6368</color>
+
+    <color name="state_ok">#7CACFF</color>
+
+    <color name="state_error">#FB5741</color>
+
 
 </resources>
