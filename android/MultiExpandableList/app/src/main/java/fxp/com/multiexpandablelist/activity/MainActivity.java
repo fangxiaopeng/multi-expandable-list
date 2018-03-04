@@ -131,6 +131,14 @@ public class MainActivity extends AppCompatActivity {
         itemInfo4.setI_value("音质很好/机身温度过高");
         itemInfos.add(itemInfo4);
 
+        ItemInfo itemInfo5 = new ItemInfo();
+        itemInfo5.setE_id("5");
+        itemInfo5.setI_id("5_1");
+        itemInfo5.setI_type("4");
+        itemInfo5.setI_name("机身状况");
+        itemInfo5.setI_content("");
+        itemInfos.add(itemInfo5);
+
         childrenList = new ArrayList<List<ItemInfo>>();
         for (int i = 0; i < 8; i++) {
             childrenList.add(itemInfos);

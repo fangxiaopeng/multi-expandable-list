@@ -1,6 +1,8 @@
 package fxp.com.multiexpandablelist.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -44,6 +46,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private final int SELECTTYPE = 2;
 
     private final int CHECKTYPE = 3;
+
+    private final int PICTYPE = 4;
 
     // 缓存单选型View选择结果，用于界面重绘后恢复选中状态
     private String itemState = "";
@@ -163,6 +167,11 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
             //复选型
             case CHECKTYPE: {
                 convertView = setCheckCell(convertView, groupPosition, childPosition);
+                break;
+            }
+            //拍照型
+            case PICTYPE: {
+                convertView = setPictureCell(convertView, groupPosition, childPosition);
                 break;
             }
             default:
@@ -392,6 +401,29 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    /**
+     * 拍照型View
+     *
+     * @param convertView
+     * @param groupPosition
+     * @param childPosition
+     * @return
+     */
+    private View setPictureCell(View convertView, final int groupPosition, final int childPosition) {
+        PicViewHolder picViewHolder = null;
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        convertView = inflater.inflate(R.layout.list_inner_picture_item, null);
+
+        picViewHolder = new PicViewHolder();
+        picViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
+
+        convertView.setTag(picViewHolder);
+
+        picViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
+
+        return convertView;
+    }
 
     class GroupViewHolder {
         private TextView lable;
@@ -418,6 +450,10 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     class CheckViewHolder {
         TextView lable;
         TagCloudLayout mContainer;
+    }
+
+    class PicViewHolder {
+        TextView lable;
     }
 
     /**
