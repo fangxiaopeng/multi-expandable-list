@@ -1,11 +1,25 @@
 package fxp.com.multiexpandablelist.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +31,8 @@ import fxp.com.multiexpandablelist.fxpInterface.GetPictureListener;
 
 public class MainActivity extends AppCompatActivity implements GetPictureListener {
 
+    private String TAG = "MainActivity";
+
     private Context context;
 
     private ExpandableListView expandableListView;
@@ -27,6 +43,12 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
 
     private List<List<ItemInfo>> childrenList = null;
 
+    public static final String IMAGE_PATH = "fxpImage";
+
+    /* 相机请求码 */
+    private static final int REQUEST_CAMERA = 0;
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
         initViews();
 
         initListeners();
+
+        solveExceptionByVmPolicy();
     }
 
     private void initDatas() {
@@ -46,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
         getGroupListData();
 
         getChildrenListData();
-
     }
 
     private void initViews() {
@@ -150,10 +173,114 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
     @Override
     public void takePicture(int groupPosition, int childPosition) {
         Toast.makeText(context, "takePicture", Toast.LENGTH_SHORT).show();
+
+        // 检查、获取相机权限
+        checkPermissions();
     }
 
     @Override
     public void selectPicture(int groupPosition, int childPosition) {
         Toast.makeText(context, "selectPicture", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int req, int res, Intent data) {
+        switch (req) {
+            case REQUEST_CAMERA:
+                if (res == RESULT_OK) {
+                    Log.i(TAG, "拍照成功");
+
+                } else {
+                    Log.i(TAG, "拍照失败");
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 调用系统相机拍照
+     */
+    private void takePhoto() {
+        String imgName = System.currentTimeMillis() + ".jpg";
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoUri(IMAGE_PATH, imgName));
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    /**
+     * 获取照片Uri
+     *
+     * @param path 保存照片文件夹名称
+     * @param name 照片名称
+     * @return
+     */
+    private Uri getPhotoUri(String path, String name) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
+            return null;
+        }
+        File file = new File(Environment.getExternalStorageDirectory(), path);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        File output = new File(file, name);
+        try {
+            if (output.exists()) {
+                output.delete();
+            }
+            output.createNewFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Uri.fromFile(output);
+    }
+
+    /**
+     * 判断、申请权限
+     */
+    private void checkPermissions() {
+        if (Build.VERSION.SDK_INT > 22 &&
+                ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            //系统版本在6.0之上且没有摄像头权限，进行权限的申请
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        } else {
+            //有摄像头权限或系统版本在6.0之下，不需要动态获取权限
+            takePhoto();
+        }
+    }
+
+    /**
+     * 申请权限的回调，
+     *
+     * @param requestCode  requestCode
+     * @param permissions  permissions
+     * @param grantResults grantResults 多个权限一起返回
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "获取相机权限成功");
+                takePhoto();
+            } else {
+                Log.i(TAG, "获取相机权限失败");
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    /**
+     * android 7.0系统解决拍照的问题
+     * Android 7.0开始，一个应用提供自身文件给其它应用使用时，如果给出一个file://格式的URI的话，应用会抛出FileUriExposedException
+     * onCreate中调用此方法即可
+     */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void solveExceptionByVmPolicy() {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
     }
 }
