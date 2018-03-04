@@ -1,5 +1,6 @@
 package fxp.com.multiexpandablelist.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -174,8 +175,14 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
     public void takePicture(int groupPosition, int childPosition) {
         Toast.makeText(context, "takePicture", Toast.LENGTH_SHORT).show();
 
-        // 检查、获取相机权限
-        checkPermissions();
+        //判断是否有权限
+        if (hasPermission(Manifest.permission.CAMERA, Manifest.permission.CAMERA)) {
+            //有权限
+            takePhoto();
+        } else {
+            //没权限，进行权限请求
+            requestPermission(REQUEST_CAMERA, Manifest.permission.CAMERA);
+        }
     }
 
     @Override
@@ -238,21 +245,29 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
     }
 
     /**
-     * 判断、申请权限
+     * 判断是否拥有权限
+     *
+     * @param permissions 形参String...的效果其实就和数组一样，这里的实参可以写多个String
+     * @return
      */
-    private void checkPermissions() {
-        if (Build.VERSION.SDK_INT > 22 &&
-                ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            //系统版本在6.0之上且没有摄像头权限，进行权限的申请
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA);
-        } else {
-            //有摄像头权限或系统版本在6.0之下，不需要动态获取权限
-            takePhoto();
+    public boolean hasPermission(String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
+                return false;
         }
+        return true;
     }
 
     /**
-     * 申请权限的回调，
+     * 请求权限
+     */
+    protected void requestPermission(int code, String... permissions) {
+        ActivityCompat.requestPermissions(this, permissions, code);
+        Toast.makeText(context, "如果拒绝授权,会导致应用无法正常使用", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 申请权限的回调
      *
      * @param requestCode  requestCode
      * @param permissions  permissions
