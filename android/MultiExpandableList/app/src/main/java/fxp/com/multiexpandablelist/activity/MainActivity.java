@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,9 @@ import fxp.com.multiexpandablelist.R;
 import fxp.com.multiexpandablelist.adapter.ExpandableListViewAdapter;
 import fxp.com.multiexpandablelist.bean.EquipmentInfo;
 import fxp.com.multiexpandablelist.bean.ItemInfo;
+import fxp.com.multiexpandablelist.fxpInterface.GetPictureListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GetPictureListener {
 
     private Context context;
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initListeners() {
-
+        expandableListViewAdapter.setGetPictureListener(this);
     }
 
     private void findViews() {
@@ -145,4 +147,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void takePicture(int groupPosition, int childPosition) {
+        Toast.makeText(context, "takePicture", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void selectPicture(int groupPosition, int childPosition) {
+        Toast.makeText(context, "selectPicture", Toast.LENGTH_SHORT).show();
+    }
 }

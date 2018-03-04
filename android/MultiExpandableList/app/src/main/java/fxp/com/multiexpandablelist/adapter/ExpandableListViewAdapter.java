@@ -1,8 +1,6 @@
 package fxp.com.multiexpandablelist.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,6 +19,7 @@ import fxp.com.multiexpandablelist.R;
 import fxp.com.multiexpandablelist.bean.EquipmentInfo;
 import fxp.com.multiexpandablelist.bean.ItemInfo;
 import fxp.com.multiexpandablelist.entity.CheckItem;
+import fxp.com.multiexpandablelist.fxpInterface.GetPictureListener;
 import fxp.com.multiexpandablelist.view.TagCloudLayout;
 
 /**
@@ -61,10 +60,16 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     // 多选型View中标签选中状态，存储所有标签的选中状态
     private List<Boolean> selectState = new ArrayList<Boolean>();
 
+    private GetPictureListener getPictureListener = null;
+
     public ExpandableListViewAdapter(Context context, List<EquipmentInfo> groupList, List<List<ItemInfo>> childrenList) {
         this.context = context;
         this.groupList = groupList;
         this.childrenList = childrenList;
+    }
+
+    public void setGetPictureListener(GetPictureListener listener) {
+        this.getPictureListener = listener;
     }
 
     @Override
@@ -417,10 +422,24 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
         picViewHolder = new PicViewHolder();
         picViewHolder.lable = (TextView) convertView.findViewById(R.id.lable);
+        picViewHolder.takePicture = (TextView) convertView.findViewById(R.id.take_pic_btn);
+        picViewHolder.selectPicure = (TextView) convertView.findViewById(R.id.select_pic_btn);
 
         convertView.setTag(picViewHolder);
 
         picViewHolder.lable.setText(childrenList.get(groupPosition).get(childPosition).getI_name());
+        picViewHolder.takePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPictureListener.takePicture(groupPosition, childPosition);
+            }
+        });
+        picViewHolder.selectPicure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPictureListener.selectPicture(groupPosition, childPosition);
+            }
+        });
 
         return convertView;
     }
@@ -454,6 +473,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     class PicViewHolder {
         TextView lable;
+        TextView takePicture;
+        TextView selectPicure;
     }
 
     /**
