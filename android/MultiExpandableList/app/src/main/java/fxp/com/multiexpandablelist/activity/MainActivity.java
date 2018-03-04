@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ExpandableListView;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
 
     private List<List<ItemInfo>> childrenList = null;
 
-    public static final String IMAGE_PATH = "fxpImage";
+    public static final String IMAGE_PATH = "fxpFiles";
 
     /* 相机请求码 */
     private static final int REQUEST_CAMERA = 0;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
 
         initListeners();
 
-        solveExceptionByVmPolicy();
+//        solveExceptionByVmPolicy();
     }
 
     private void initDatas() {
@@ -241,7 +242,14 @@ public class MainActivity extends AppCompatActivity implements GetPictureListene
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Uri.fromFile(output);
+
+        // 解决Android7.0相机权限问题方法1 - onCreate中调用solveExceptionByVmPolicy()
+//        Uri photoURI = Uri.fromFile(output);
+
+        // 解决Android7.0相机权限问题方法2 - FileProvider方式（谷歌官方推荐）
+        Uri photoURI = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", output);
+
+        return photoURI;
     }
 
     /**
